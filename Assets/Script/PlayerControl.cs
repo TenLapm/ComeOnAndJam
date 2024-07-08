@@ -26,6 +26,7 @@ public class PlayerControl : MonoBehaviour
     void Update()
     {
         Control();
+        Moving();
     }
 
     private void Control()
@@ -61,8 +62,13 @@ public class PlayerControl : MonoBehaviour
             }
             isDeAcceleration = false;
         }
-        
-        if(isDeAcceleration == true)
+
+        else if (Input.GetKeyUp(KeyCode.S))
+        {
+            isDeAcceleration = true;
+        }
+
+        if (isDeAcceleration == true)
         {
             if (speed < minimumSpeed)
             {
@@ -85,11 +91,12 @@ public class PlayerControl : MonoBehaviour
             gameObject.transform.Rotate(0.0f, 0.0f, -facing);
         }
 
-        Moving();
+        
     }
 
     private void Moving()
     {
-        rb.MovePosition(rb.position + (Vector2)transform.up * speed * Time.deltaTime);
+        //rb.MovePosition(rb.position + (Vector2)transform.forward * speed * Time.deltaTime);
+        rb.velocity = transform.up * speed;
     }
 }
