@@ -926,6 +926,7 @@ MonoBehaviour:
   facing: 0.5
   minimumSpeedForBounce: 5
   maxBounceTime: 1
+  player: 1
 --- !u!50 &908397730
 Rigidbody2D:
   serializedVersion: 4
