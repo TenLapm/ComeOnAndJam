@@ -7,15 +7,19 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     private bool isBouncing = false;
-    private bool isDeAcceleration = false;
+    private bool isDeacceleration = false;
     private float speed = 0.0f;
+    private Vector3 lastVelocity;
     private Rigidbody2D rb;
+    private float bounceTime;
+    private Vector3 direction;
     [SerializeField] private float maxSpeed = 10.0f;
     [SerializeField] private float minimumSpeed = 0.0f;
     [SerializeField] private float upSpeed = 0.5f;
     [SerializeField] private float slowSpeed = 0.5f;
     [SerializeField] private float facing = 0.5f;
-    [SerializeField] private float minimumSpeedBounce = 0.0f;
+    [SerializeField] private float minimumSpeedForBounce = 5.0f;
+    [SerializeField] private float maxBounceTime = 1.0f;
 
     void Start()
     {
@@ -25,8 +29,33 @@ public class PlayerControl : MonoBehaviour
     
     void Update()
     {
-        Control();
-        Moving();
+        lastVelocity = rb.velocity;
+        
+        if (!isBouncing)
+        {
+            Control();
+            Moving();
+        }
+
+        if (isBouncing)
+        {
+            if(speed > 0.0f)
+            {
+                speed -= slowSpeed;
+            }
+            bounceTime -= Time.deltaTime;
+            Moving();
+        }
+        
+        if(bounceTime < 0.0f)
+        {
+            isBouncing = false;
+        }
+
+        if(speed < 0.0f)
+        {
+            speed = 0.0f;
+        }
     }
 
     private void Control()
@@ -42,11 +71,11 @@ public class PlayerControl : MonoBehaviour
             {
                 speed += upSpeed;
             }
-            isDeAcceleration = false;
+            isDeacceleration = false;
         }
         else if (Input.GetKeyUp(KeyCode.W))
         {
-            isDeAcceleration = true;
+            isDeacceleration = true;
         }
         
         else if(Input.GetKey(KeyCode.S)) 
@@ -60,15 +89,15 @@ public class PlayerControl : MonoBehaviour
             {
                 speed -= slowSpeed;
             }
-            isDeAcceleration = false;
+            isDeacceleration = false;
         }
 
         else if (Input.GetKeyUp(KeyCode.S))
         {
-            isDeAcceleration = true;
+            isDeacceleration = true;
         }
 
-        if (isDeAcceleration == true)
+        if (isDeacceleration == true)
         {
             if (speed < minimumSpeed)
             {
@@ -97,6 +126,33 @@ public class PlayerControl : MonoBehaviour
     private void Moving()
     {
         //rb.MovePosition(rb.position + (Vector2)transform.forward * speed * Time.deltaTime);
-        rb.velocity = transform.up * speed;
+        if (!isBouncing)
+        {
+            rb.velocity = transform.up * speed;
+        }
+
+        else if (isBouncing)
+        {
+            rb.velocity = direction * Mathf.Max(speed, 0f);
+        }
+        
+    }
+
+    //private void Bouceing(Collision2D collision)
+    //{
+        
+        
+    //}
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (speed > minimumSpeedForBounce)
+        {
+            direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
+            //float rotationZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90;
+            //transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
+            isBouncing = true;
+            bounceTime = maxBounceTime;
+        }
     }
 }

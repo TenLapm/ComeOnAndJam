@@ -919,12 +919,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae65dea5cafcfd040a7cf293fe38b71c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 7.5
+  maxSpeed: 8
   minimumSpeed: 0
   upSpeed: 0.5
   slowSpeed: 0.05
   facing: 0.5
-  minimumSpeedBounce: 0
+  minimumSpeedForBounce: 5
+  maxBounceTime: 1
 --- !u!50 &908397730
 Rigidbody2D:
   serializedVersion: 4
