@@ -1,6 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMove : MonoBehaviour
 {
     public int playerNumber;
     public float moveSpeed = 5f;
@@ -13,7 +15,6 @@ public class PlayerMovement : MonoBehaviour
     {
         gridManager = FindObjectOfType<GridManager>();
 
-        // Calculate player radius based on sprite size
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
@@ -23,12 +24,12 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            playerRadius = 1.0f; // Default radius if no sprite renderer found
+            playerRadius = 1.0f; 
         }
 
         Vector2Int gridPosition = gridManager.WorldToGridPosition(transform.position);
         previousGridPosition = gridPosition;
-        gridManager.ChangeTileColor(gridPosition, playerColor, playerRadius);
+        gridManager.ChangeTileColor(gridPosition, playerColor, playerRadius/0.025f);
     }
 
     private void Update()

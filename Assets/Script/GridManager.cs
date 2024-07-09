@@ -18,7 +18,6 @@ public class GridManager : MonoBehaviour
     {
         gridArray = new GameObject[rows, cols];
 
-        // Calculate the starting position to center the grid
         float gridWidth = cols * tileSize;
         float gridHeight = rows * tileSize;
         Vector3 startPos = new Vector3(-gridWidth / 2 + tileSize / 2, -gridHeight / 2 + tileSize / 2, 0);
