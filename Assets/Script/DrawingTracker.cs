@@ -4,7 +4,7 @@ using TMPro;
 public class DrawingTracker : MonoBehaviour
 {
     public TextMeshProUGUI percentageText; // Reference to the UI Text element
-    public int totalPixels = 10000; // Total number of pixels on the canvas
+    public int totalPixels = 1920 * 1080; // Total number of pixels on the canvas
     private int drawnPixels = 0;
 
     private void Start()
