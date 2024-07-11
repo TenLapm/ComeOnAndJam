@@ -1302,7 +1302,7 @@ Transform:
   m_GameObject: {fileID: 908397726}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8, y: -3.23, z: 0}
+  m_LocalPosition: {x: 0.84, y: -3.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1322,7 +1322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 8
-  minimumSpeed: 0
+  minimumSpeed: -2
   upSpeed: 0.5
   slowSpeed: 0.05
   facing: 0.5

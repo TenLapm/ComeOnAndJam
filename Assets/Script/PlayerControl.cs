@@ -20,11 +20,12 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody2D rb;
     private float bounceTime;
     private Vector3 direction;
+    private float spiningSpeed;
     [SerializeField] private float maxSpeed = 10.0f;
     [SerializeField] private float minimumSpeed = 0.0f;
     [SerializeField] private float upSpeed = 0.5f;
     [SerializeField] private float slowSpeed = 0.5f;
-    [SerializeField] private float facing = 0.5f;
+    [SerializeField] private float turning = 0.5f;
     [SerializeField] private float minimumSpeedForBounce = 5.0f;
     [SerializeField] private float maxBounceTime = 1.0f;
     [SerializeField] private Player player;
@@ -37,8 +38,16 @@ public class PlayerControl : MonoBehaviour
     
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
+        {
+            isDeacceleration = true;
+        }
+    }
+
+    void FixedUpdate()
+    {
         lastVelocity = rb.velocity;
-        
+
         if (!isBouncing)
         {
             Control();
@@ -47,22 +56,18 @@ public class PlayerControl : MonoBehaviour
 
         if (isBouncing)
         {
-            if(speed > 0.0f)
+            if (speed > 0.0f)
             {
                 speed -= slowSpeed;
             }
             bounceTime -= Time.deltaTime;
+            gameObject.transform.Rotate(0.0f, 0.0f, -spiningSpeed);
             Moving();
         }
-        
-        if(bounceTime < 0.0f)
+
+        if (bounceTime < 0.0f)
         {
             isBouncing = false;
-        }
-
-        if(speed < 0.0f)
-        {
-            speed = 0.0f;
         }
     }
 
@@ -84,26 +89,27 @@ public class PlayerControl : MonoBehaviour
                 }
                 isDeacceleration = false;
             }
-            else if (Input.GetKeyUp(KeyCode.W))
+            if (Input.GetKeyUp(KeyCode.W))
             {
                 isDeacceleration = true;
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                if (speed < minimumSpeed)
+                if (speed <= minimumSpeed)
                 {
                     speed = minimumSpeed;
                 }
 
-                if (speed != minimumSpeed)
+                if(speed <= 0)
+                {
+                    speed -= slowSpeed * 5;
+                }
+
+                else if (speed != minimumSpeed)
                 {
                     speed -= slowSpeed;
                 }
                 isDeacceleration = false;
-            }
-            else if (Input.GetKeyUp(KeyCode.S))
-            {
-                isDeacceleration = true;
             }
             if (isDeacceleration == true)
             {
@@ -120,11 +126,11 @@ public class PlayerControl : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.A))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, facing);
+                gameObject.transform.Rotate(0.0f, 0.0f, turning);
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, -facing);
+                gameObject.transform.Rotate(0.0f, 0.0f, -turning);
             }
         }
         if(player == Player.PlayerB)
@@ -179,12 +185,18 @@ public class PlayerControl : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, facing);
+                gameObject.transform.Rotate(0.0f, 0.0f, turning);
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, -facing);
+                gameObject.transform.Rotate(0.0f, 0.0f, -turning);
             }
+        }
+
+        if(speed <= 0 && isDeacceleration)
+        {
+            speed = 0;
+            isDeacceleration = false;
         }
     }
 
@@ -213,11 +225,13 @@ public class PlayerControl : MonoBehaviour
         if (speed > minimumSpeedForBounce)
         {
             direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
-            transform.rotation = rotationZ;
+            spiningSpeed = (speed - minimumSpeedForBounce) / 0.5f;
+            //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            //Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
+            //transform.rotation = rotationZ;
             isBouncing = true;
             bounceTime = maxBounceTime;
         }
+        isDeacceleration = true;
     }
 }
