@@ -1,128 +1,96 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DrawMesh : MonoBehaviour
 {
-    [SerializeField] private Transform player; // Reference to the player Transform
-    [SerializeField] private Transform leftBrush; // Reference to the left brush GameObject
-    [SerializeField] private Transform rightBrush; // Reference to the right brush GameObject
-    [SerializeField] private DrawingTracker drawingTracker; // Reference to the DrawingTracker script
-    public bool isPlayer1; // True if this script belongs to Player 1, false for Player 2
-    public Material drawingMaterial; // Reference to the material to use for drawing
+    [SerializeField] private Transform player1; 
+    [SerializeField] private Transform player2; 
+    [SerializeField] private float brushRadius = 1f; 
 
-    private Mesh mesh;
-    private Vector3 lastPlayerPosition;
+    [Header("Paint Colors")]
+    [SerializeField] private Color player1Color = Color.red; 
+    [SerializeField] private Color player2Color = Color.blue; 
 
-    private InventoryPowerUps IPU;
-    private Vector3 sizeAdjust = new Vector3(3.0f, 3.0f, 3.0f);
-    private Renderer meshRenderer;
+    [Header("Materials")]
+    [SerializeField] private Material player1Material; 
+    [SerializeField] private Material player2Material; 
+
+    private Mesh mesh1;
+    private Mesh mesh2;
+    private Vector3 lastPlayer1Position;
+    private Vector3 lastPlayer2Position;
+    private List<Vector3> vertices1 = new List<Vector3>();
+    private List<Vector3> vertices2 = new List<Vector3>();
+    private List<int> triangles1 = new List<int>();
+    private List<int> triangles2 = new List<int>();
+    private List<Color> colors1 = new List<Color>();
+    private List<Color> colors2 = new List<Color>();
 
     private void Awake()
     {
-        // Initialize the MeshFilter component
-        GetComponent<MeshFilter>().mesh = new Mesh();
-        IPU = GetComponent<InventoryPowerUps>();
+        mesh1 = new Mesh();
+        mesh2 = new Mesh();
 
-        // Ensure the Renderer component is attached
-        meshRenderer = GetComponent<Renderer>();
-        if (meshRenderer == null)
-        {
-            meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        }
+        GameObject brush1 = new GameObject("Brush1");
+        brush1.AddComponent<MeshFilter>().mesh = mesh1;
+        brush1.AddComponent<MeshRenderer>().material = player1Material;
 
-        // Set the material
-        meshRenderer.material = drawingMaterial;
+        GameObject brush2 = new GameObject("Brush2");
+        brush2.AddComponent<MeshFilter>().mesh = mesh2;
+        brush2.AddComponent<MeshRenderer>().material = player2Material;
 
-        // Set the sorting order to ensure it renders on top
-        meshRenderer.sortingLayerName = "Default";
-        meshRenderer.sortingOrder = 10;
+        brush1.transform.SetParent(transform);
+        brush2.transform.SetParent(transform);
     }
 
-    private void Start()
+    private void Update()
     {
-        mesh = new Mesh();
-        UpdateMesh();
-        lastPlayerPosition = player.position;
+        PaintPlayer(player1, ref lastPlayer1Position, mesh1, vertices1, triangles1, colors1, player1Color); 
+        PaintPlayer(player2, ref lastPlayer2Position, mesh2, vertices2, triangles2, colors2, player2Color); 
     }
 
-    private void FixedUpdate()
+    private void PaintPlayer(Transform player, ref Vector3 lastPlayerPosition, Mesh mesh, List<Vector3> vertices, List<int> triangles, List<Color> colors, Color brushColor)
     {
-        float brushRadius = player.GetComponent<SpriteRenderer>().bounds.extents.x;
         float minDistance = .1f;
         Vector3 playerPosition = player.position;
 
         if (Vector3.Distance(playerPosition, lastPlayerPosition) > minDistance)
         {
-            // Use left and right brushes for drawing
-            Vector3 leftBrushPosition = leftBrush.position;
-            Vector3 rightBrushPosition = rightBrush.position;
-
-            Vector3[] vertices = new Vector3[mesh.vertexCount + 4];
-            Vector2[] uv = new Vector2[mesh.uv.Length + 4];
-            int[] triangles = new int[mesh.triangles.Length + 6];
-
-            mesh.vertices.CopyTo(vertices, 0);
-            mesh.uv.CopyTo(uv, 0);
-            mesh.triangles.CopyTo(triangles, 0);
-
-            int vIndex = mesh.vertexCount;
+            int vIndex = vertices.Count;
 
             Vector3 playerForwardVector = (playerPosition - lastPlayerPosition).normalized;
             Vector3 normal2D = new Vector3(0, 0, -1f);
             Vector3 newVertexUp = playerPosition + Vector3.Cross(playerForwardVector, normal2D) * brushRadius;
-            Vector3 newVertexDown = playerPosition + Vector3.Cross(playerForwardVector, -normal2D) * brushRadius;
+            Vector3 newVertexDown = playerPosition + Vector3.Cross(playerForwardVector, normal2D * -1f) * brushRadius;
 
-            vertices[vIndex] = lastPlayerPosition;
-            vertices[vIndex + 1] = lastPlayerPosition;
-            vertices[vIndex + 2] = newVertexUp;
-            vertices[vIndex + 3] = newVertexDown;
+            vertices.Add(newVertexUp);
+            vertices.Add(newVertexDown);
+            colors.Add(brushColor);
+            colors.Add(brushColor);
 
-            uv[vIndex] = Vector2.zero;
-            uv[vIndex + 1] = Vector2.zero;
-            uv[vIndex + 2] = Vector2.zero;
-            uv[vIndex + 3] = Vector2.zero;
-
-            int tIndex = mesh.triangles.Length;
-
-            triangles[tIndex] = vIndex;
-            triangles[tIndex + 1] = vIndex + 2;
-            triangles[tIndex + 2] = vIndex + 1;
-            triangles[tIndex + 3] = vIndex + 1;
-            triangles[tIndex + 4] = vIndex + 2;
-            triangles[tIndex + 5] = vIndex + 3;
-
-            mesh.vertices = vertices;
-            mesh.uv = uv;
-            mesh.triangles = triangles;
-
-            // Update drawn pixels count
-            int drawnPixelCount = CalculateDrawnPixels(vIndex, vIndex + 1, vIndex + 2, vIndex + 3);
-            drawingTracker.AddDrawnPixels(drawnPixelCount);
-
-            lastPlayerPosition = playerPosition;
-
-            if (Input.GetKeyDown(KeyCode.L))
+            if (vIndex > 0)
             {
-                player.localScale = Vector3.Scale(player.localScale, sizeAdjust);
+                triangles.Add(vIndex - 2);
+                triangles.Add(vIndex);
+                triangles.Add(vIndex - 1);
+
+                triangles.Add(vIndex - 1);
+                triangles.Add(vIndex);
+                triangles.Add(vIndex + 1);
             }
 
-            UpdateMesh();
+            
+            UpdateMesh(mesh, vertices, triangles, colors);
+            lastPlayerPosition = playerPosition;
         }
     }
 
-    private void UpdateMesh()
+    private void UpdateMesh(Mesh mesh, List<Vector3> vertices, List<int> triangles, List<Color> colors)
     {
-        GetComponent<MeshFilter>().mesh = mesh;
-    }
-
-    private int CalculateDrawnPixels(int vIndex0, int vIndex1, int vIndex2, int vIndex3)
-    {
-        Vector3[] vertices = mesh.vertices;
-        float area = Mathf.Abs(Vector3.Cross(vertices[vIndex1] - vertices[vIndex0], vertices[vIndex2] - vertices[vIndex0]).z) / 2f
-                   + Mathf.Abs(Vector3.Cross(vertices[vIndex2] - vertices[vIndex1], vertices[vIndex3] - vertices[vIndex1]).z) / 2f;
-        int pixelCount = Mathf.RoundToInt(area * 100); // Adjust this value as needed
-        Debug.Log("Drawn Pixel Count: " + pixelCount);
-        return pixelCount;
+        mesh.Clear();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.colors = colors.ToArray();
+        mesh.RecalculateNormals(); 
     }
 }

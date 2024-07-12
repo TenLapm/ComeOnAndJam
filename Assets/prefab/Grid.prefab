@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2447109604467958520
+--- !u!1 &8158485400830192539
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2912921893322073809}
-  - component: {fileID: 6564402679271066956}
+  - component: {fileID: 2879104596501149809}
+  - component: {fileID: 7940735929253014127}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -17,34 +17,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2912921893322073809
+--- !u!4 &2879104596501149809
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2447109604467958520}
+  m_GameObject: {fileID: 8158485400830192539}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.4164388, y: -2.6191905, z: -0.033431828}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6564402679271066956
+--- !u!114 &7940735929253014127
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2447109604467958520}
+  m_GameObject: {fileID: 8158485400830192539}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfcc9e0498bdb6443b2f0fd44c73c5e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 33d24eefb9c39504fb8c87f9254b36c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rows: 100
   cols: 200
   tileSize: 0.1
-  tilePrefab: {fileID: 1642301110151974190, guid: 5ff8c286487b55d46b928411abbd9edc, type: 3}
+  tilePrefab: {fileID: 5275337876110661738, guid: 098969d2e5e3c3a4389387844c643081, type: 3}
+  playerAText: {fileID: 0}
+  playerBText: {fileID: 0}

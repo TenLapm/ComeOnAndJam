@@ -35,7 +35,6 @@ public class PlayerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // Find GridManager in the scene
         gridManager = FindObjectOfType<GridManager>();
         if (gridManager == null)
         {
@@ -74,7 +73,6 @@ public class PlayerControl : MonoBehaviour
             speed = 0.0f;
         }
 
-        // Mark the grid as the player moves
         if (gridManager != null)
         {
             Vector3 playerPosition = transform.position;

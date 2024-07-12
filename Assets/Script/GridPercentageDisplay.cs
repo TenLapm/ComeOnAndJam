@@ -23,9 +23,4 @@ public class GridPercentageDisplay : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        //float markedPercentage = gridManager.GetMarkedPercentage();
-        //percentageText.text = $"Grid Walked: {markedPercentage:F2}%";
-    }
 }
