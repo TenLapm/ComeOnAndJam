@@ -5,10 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-
 public enum Player
 {
-    PlayerA, PlayerB
+    PlayerA, PlayerB,Default
 }
 
 public class PlayerControl : MonoBehaviour
@@ -28,17 +27,26 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float minimumSpeedForBounce = 5.0f;
     [SerializeField] private float maxBounceTime = 1.0f;
     [SerializeField] private Player player;
-    
+
+    public float brushRadius;
+    private GridManager gridManager;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        gridManager = FindObjectOfType<GridManager>();
+        if (gridManager == null)
+        {
+            Debug.LogError("GridManager component not found in the scene.");
+        }
+        brushRadius = transform.localScale.x;
     }
 
-    
-    void Update()
+    void FixedUpdate()
     {
         lastVelocity = rb.velocity;
-        
+
         if (!isBouncing)
         {
             Control();
@@ -47,32 +55,39 @@ public class PlayerControl : MonoBehaviour
 
         if (isBouncing)
         {
-            if(speed > 0.0f)
+            if (speed > 0.0f)
             {
                 speed -= slowSpeed;
             }
             bounceTime -= Time.deltaTime;
             Moving();
         }
-        
-        if(bounceTime < 0.0f)
+
+        if (bounceTime < 0.0f)
         {
             isBouncing = false;
         }
 
-        if(speed < 0.0f)
+        if (speed < 0.0f)
         {
             speed = 0.0f;
         }
+
+        if (gridManager != null)
+        {
+            Vector3 playerPosition = transform.position;
+            Vector2Int gridPosition = gridManager.WorldToGridPosition(transform.position);
+            gridManager.ChangeTileOwner(gridPosition, player, brushRadius);
+        }
+
     }
 
     private void Control()
     {
-        if(player == Player.PlayerA)
+        if (player == Player.PlayerA)
         {
             if (Input.GetKey(KeyCode.W))
             {
-
                 if (speed > maxSpeed)
                 {
                     speed = maxSpeed;
@@ -116,7 +131,6 @@ public class PlayerControl : MonoBehaviour
                 {
                     speed -= (slowSpeed - 0.03f);
                 }
-
             }
             if (Input.GetKey(KeyCode.A))
             {
@@ -127,11 +141,10 @@ public class PlayerControl : MonoBehaviour
                 gameObject.transform.Rotate(0.0f, 0.0f, -facing);
             }
         }
-        if(player == Player.PlayerB)
+        if (player == Player.PlayerB)
         {
             if (Input.GetKey(KeyCode.UpArrow))
             {
-
                 if (speed > maxSpeed)
                 {
                     speed = maxSpeed;
@@ -175,7 +188,6 @@ public class PlayerControl : MonoBehaviour
                 {
                     speed -= (slowSpeed - 0.03f);
                 }
-
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
@@ -190,23 +202,15 @@ public class PlayerControl : MonoBehaviour
 
     private void Moving()
     {
-        //rb.MovePosition(rb.position + (Vector2)transform.forward * speed * Time.deltaTime);
         if (!isBouncing)
         {
             rb.velocity = transform.up * speed;
         }
-
         else if (isBouncing)
         {
             rb.velocity = direction * Mathf.Max(speed, 0f);
         }
-        
     }
-
-    //private void Bouceing(Collision2D collision)
-    //{
-
-    //}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -219,5 +223,18 @@ public class PlayerControl : MonoBehaviour
             isBouncing = true;
             bounceTime = maxBounceTime;
         }
+    }
+
+    private Vector2Int WorldToGridPosition(Vector3 worldPosition)
+    {
+        float gridWidth = gridManager.cols * gridManager.tileSize;
+        float gridHeight = gridManager.rows * gridManager.tileSize;
+        Vector3 startPos = new Vector3(-gridWidth / 2 + gridManager.tileSize / 2, -gridHeight / 2 + gridManager.tileSize / 2, 0);
+
+        Vector3 localPos = worldPosition - startPos;
+        int col = Mathf.FloorToInt(localPos.x / gridManager.tileSize);
+        int row = Mathf.FloorToInt(localPos.y / gridManager.tileSize);
+
+        return new Vector2Int(col, row);
     }
 }
