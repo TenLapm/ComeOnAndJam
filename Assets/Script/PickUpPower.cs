@@ -21,6 +21,7 @@ public class PickUpPower : MonoBehaviour
     {
         if(other.tag == "PowerUp")
         {
+            SoundManager.PlaySound(SoundManager.Sound.TestSound);
             Debug.Log("Pickup");
             Destroy(other.gameObject);
             IPU.HavePowerUp = true;
