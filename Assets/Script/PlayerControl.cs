@@ -28,6 +28,9 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float maxBounceTime = 1.0f;
     [SerializeField] private Player player;
 
+    [SerializeField] private GameObject trailSpawnPoint1;
+    [SerializeField] private GameObject trailSpawnPoint2;
+    [SerializeField] private GameObject trailSpawnPoint3;
     public float brushRadius;
     private GridManager gridManager;
 
