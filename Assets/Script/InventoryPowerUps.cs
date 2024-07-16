@@ -10,6 +10,7 @@ public class InventoryPowerUps : MonoBehaviour
     private PowerUps PowerUp;
     private float duration;
     private Transform scale;
+    private SpawnPointPowerUps spawnPointPowerUps;
     void Start()
     {
         
@@ -19,7 +20,6 @@ public class InventoryPowerUps : MonoBehaviour
     {
         UsingPowerUps();
         PowerUpsDuration();
-        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -30,6 +30,11 @@ public class InventoryPowerUps : MonoBehaviour
             Destroy(other.gameObject);
             HavePowerUp = true;
             PowerUp = other.GetComponent<PowerUpUi>().Powerup;
+            spawnPointPowerUps.count--;
+        }
+        else if(other.tag == "SPPU")
+        {
+            spawnPointPowerUps = other.GetComponent<SpawnPointPowerUps>();
         }
     }
 
