@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - PowerUp
+  - Obs
+  - Crash
   layers:
   - Default
   - TransparentFX
@@ -14,9 +15,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Pointer
+  - Not_In_Minimap
+  - Minimap_Layer
   - 
   - 
   - 

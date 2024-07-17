@@ -20,6 +20,9 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody2D rb;
     private float bounceTime;
     private Vector3 direction;
+    private float directionF;
+    private float turnDirection;
+    private float headingDirection;
     [SerializeField] private float maxSpeed = 10.0f;
     [SerializeField] private float minimumSpeed = 0.0f;
     [SerializeField] private float upSpeed = 0.5f;
@@ -33,6 +36,13 @@ public class PlayerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
+    private void Update()
+    {
+        if (!isBouncing)
+        {
+            Control();
+        }
+    }
 
     
     void Update()
@@ -41,7 +51,7 @@ public class PlayerControl : MonoBehaviour
         
         if (!isBouncing)
         {
-            Control();
+            
             Moving();
         }
 
@@ -80,7 +90,7 @@ public class PlayerControl : MonoBehaviour
 
                 if (speed != maxSpeed)
                 {
-                    speed += upSpeed;
+                    speed += upSpeed * Time.deltaTime;
                 }
                 isDeacceleration = false;
             }
@@ -118,14 +128,7 @@ public class PlayerControl : MonoBehaviour
                 }
 
             }
-            if (Input.GetKey(KeyCode.A))
-            {
-                gameObject.transform.Rotate(0.0f, 0.0f, facing);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                gameObject.transform.Rotate(0.0f, 0.0f, -facing);
-            }
+            
         }
         if(player == Player.PlayerB)
         {
@@ -139,7 +142,7 @@ public class PlayerControl : MonoBehaviour
 
                 if (speed != maxSpeed)
                 {
-                    speed += upSpeed;
+                    speed += upSpeed * Time.deltaTime;
                 }
                 isDeacceleration = false;
             }
@@ -177,14 +180,7 @@ public class PlayerControl : MonoBehaviour
                 }
 
             }
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                gameObject.transform.Rotate(0.0f, 0.0f, facing);
-            }
-            else if (Input.GetKey(KeyCode.RightArrow))
-            {
-                gameObject.transform.Rotate(0.0f, 0.0f, -facing);
-            }
+            
         }
     }
 
@@ -193,12 +189,28 @@ public class PlayerControl : MonoBehaviour
         //rb.MovePosition(rb.position + (Vector2)transform.forward * speed * Time.deltaTime);
         if (!isBouncing)
         {
-            rb.velocity = transform.up * speed;
+            turnDirection = - Input.GetAxis("Horizontal");
+            if(isDeacceleration)
+            {
+                headingDirection = Input.GetAxis("Vertical") * slowSpeed;
+            }
+            else
+            {
+                headingDirection = Input.GetAxis("Vertical") * speed;
+            }
+            
+            directionF = Mathf.Sign(Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.up)));
+            rb.rotation += turnDirection * facing * rb.velocity.magnitude * directionF;
+
+            rb.AddRelativeForce(Vector2.up * headingDirection);
+            rb.AddRelativeForce(-Vector2.right * rb.velocity.magnitude * turnDirection / 2);
         }
 
         else if (isBouncing)
         {
+
             rb.velocity = direction * Mathf.Max(speed, 0f);
+            
         }
         
     }
@@ -214,10 +226,16 @@ public class PlayerControl : MonoBehaviour
         {
             direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            rb.velocity = direction * speed;
+            
             Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
             transform.rotation = rotationZ;
             isBouncing = true;
             bounceTime = maxBounceTime;
+        }
+        else
+        {
+            rb.velocity = direction;
         }
     }
 }
