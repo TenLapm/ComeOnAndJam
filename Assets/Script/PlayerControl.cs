@@ -1,14 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
 
 public enum Player
 {
-    PlayerA, PlayerB,Default
+    PlayerA, PlayerB, Default
 }
 
 public class PlayerControl : MonoBehaviour
@@ -27,33 +23,38 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float upSpeed = 0.5f;
     [SerializeField] private float slowSpeed = 0.5f;
     [SerializeField] private float facing = 0.5f;
-    [SerializeField] private float turning = 0.5f;
     [SerializeField] private float minimumSpeedForBounce = 5.0f;
     [SerializeField] private float maxBounceTime = 1.0f;
     [SerializeField] private Player player;
 
+    [SerializeField] private GameObject trailSpawnPoint1;
+    [SerializeField] private GameObject trailSpawnPoint2;
+    [SerializeField] private GameObject trailSpawnPoint3;
     public float brushRadius;
     private GridManager gridManager;
+
+    [SerializeField] private GameObject spritePrefab1;
+    [SerializeField] private GameObject spritePrefab2;
+    [SerializeField] private GameObject spritePrefab3;
+
+    [SerializeField] private float spawnDistance = 5.0f; // Distance threshold for spawning sprites
+    private Vector3 lastSpawnPosition;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-    }
-
-
-    void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
+        gridManager = FindObjectOfType<GridManager>();
+        if (gridManager == null)
         {
-            isDeacceleration = true;
+            Debug.LogError("GridManager component not found in the scene.");
         }
         brushRadius = transform.localScale.x;
-
+        lastSpawnPosition = transform.position;
     }
 
     void FixedUpdate()
     {
         lastVelocity = rb.velocity;
-
 
         if (!isBouncing)
         {
@@ -64,35 +65,34 @@ public class PlayerControl : MonoBehaviour
         if (isBouncing)
         {
             if (speed > 0.0f)
-                if (speed > 0.0f)
-                {
-                    speed -= slowSpeed;
-                }
+            {
+                speed -= slowSpeed;
+            }
             bounceTime -= Time.deltaTime;
-            gameObject.transform.Rotate(0.0f, 0.0f, -spiningSpeed);
             Moving();
-
         }
 
-        if (bounceTime < 0.0f && isBouncing)
+        if (bounceTime < 0.0f)
         {
             isBouncing = false;
-            isHittingWall = false;
         }
 
         if (speed < 0.0f)
         {
-            if (bounceTime < 0.0f)
-            {
-                speed = 0.0f;
-                isBouncing = false;
-            }
+            speed = 0.0f;
         }
+
         if (gridManager != null)
         {
             Vector3 playerPosition = transform.position;
             Vector2Int gridPosition = gridManager.WorldToGridPosition(transform.position);
             gridManager.ChangeTileOwner(gridPosition, player, brushRadius);
+        }
+
+        if (Vector3.Distance(transform.position, lastSpawnPosition) >= spawnDistance)
+        {
+            SpawnSprite();
+            lastSpawnPosition = transform.position;
         }
     }
 
@@ -102,85 +102,40 @@ public class PlayerControl : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.W))
             {
-
-                if (speed > maxSpeed)
-                {
-                    speed = maxSpeed;
-                }
-
-                if (speed != maxSpeed)
-                {
-                    speed += upSpeed;
-                }
+                speed = Mathf.Min(speed + upSpeed, maxSpeed);
                 isDeacceleration = false;
             }
-            
-            if (Input.GetKeyUp(KeyCode.W))
-                {
-                    isDeacceleration = true;
-                }
-                else if (Input.GetKey(KeyCode.S))
-                {
-                    if (speed < minimumSpeed)
-                        if (speed <= minimumSpeed)
-                        {
-                            speed = minimumSpeed;
-                        }
-
-                    if (speed != minimumSpeed)
-                        if (speed <= 0)
-                        {
-                            speed -= slowSpeed * 5;
-                        }
-
-                        else if (speed != minimumSpeed)
-                        {
-                            speed -= slowSpeed;
-                        }
-                    isDeacceleration = false;
-                }
-                else if (Input.GetKeyUp(KeyCode.S))
-                {
-                    isDeacceleration = true;
-                }
-            if (isDeacceleration == true)
+            else if (Input.GetKeyUp(KeyCode.W))
             {
-                if (speed < minimumSpeed)
-                {
-                    speed = minimumSpeed;
-                }
-
-                if (speed != minimumSpeed)
-                {
-                    speed -= (slowSpeed - 0.03f);
-                }
-
+                isDeacceleration = true;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                speed = Mathf.Max(speed - slowSpeed, minimumSpeed);
+                isDeacceleration = false;
+            }
+            else if (Input.GetKeyUp(KeyCode.S))
+            {
+                isDeacceleration = true;
+            }
+            if (isDeacceleration)
+            {
+                speed = Mathf.Max(speed - (slowSpeed - 0.03f), minimumSpeed);
             }
             if (Input.GetKey(KeyCode.A))
             {
                 gameObject.transform.Rotate(0.0f, 0.0f, facing);
-                gameObject.transform.Rotate(0.0f, 0.0f, turning);
             }
             else if (Input.GetKey(KeyCode.D))
             {
                 gameObject.transform.Rotate(0.0f, 0.0f, -facing);
-                gameObject.transform.Rotate(0.0f, 0.0f, -turning);
             }
         }
-        if (player == Player.PlayerB)
+        else if (player == Player.PlayerB)
         {
             if (Input.GetKey(KeyCode.UpArrow))
             {
-
-                if (speed > maxSpeed)
-                {
-                    speed = maxSpeed;
-                }
-
-                if (speed != maxSpeed)
-                {
-                    speed += upSpeed;
-                }
+                speed = Mathf.Min(speed + upSpeed, maxSpeed);
                 isDeacceleration = false;
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
@@ -189,116 +144,89 @@ public class PlayerControl : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.DownArrow))
             {
-                if (speed < minimumSpeed)
-                {
-                    speed = minimumSpeed;
-                }
-
-                if (speed != minimumSpeed)
-                {
-                    speed -= slowSpeed;
-                }
+                speed = Mathf.Max(speed - slowSpeed, minimumSpeed);
                 isDeacceleration = false;
             }
             else if (Input.GetKeyUp(KeyCode.DownArrow))
             {
                 isDeacceleration = true;
             }
-            if (isDeacceleration == true)
+            if (isDeacceleration)
             {
-                if (speed < minimumSpeed)
-                {
-                    speed = minimumSpeed;
-                }
-
-                if (speed != minimumSpeed)
-                {
-                    speed -= (slowSpeed - 0.03f);
-                }
-
+                speed = Mathf.Max(speed - (slowSpeed - 0.03f), minimumSpeed);
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 gameObject.transform.Rotate(0.0f, 0.0f, facing);
-                gameObject.transform.Rotate(0.0f, 0.0f, turning);
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
                 gameObject.transform.Rotate(0.0f, 0.0f, -facing);
-                gameObject.transform.Rotate(0.0f, 0.0f, -turning);
             }
-        }
-
-        if (speed <= 0 && isDeacceleration)
-        {
-            speed = 0;
-            isDeacceleration = false;
         }
     }
 
     private void Moving()
     {
-        //rb.MovePosition(rb.position + (Vector2)transform.forward * speed * Time.deltaTime);
         if (!isBouncing)
         {
             rb.velocity = transform.up * speed;
-            
-            if (isHittingWall)
-            {
-                rb.velocity = transform.up * 1;
-            }
         }
-
         else if (isBouncing)
         {
             rb.velocity = direction * Mathf.Max(speed, 0f);
         }
     }
 
-    //private void Bouceing(Collision2D collision)
-    //{
-
-    //}
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (speed > minimumSpeedForBounce && !isHittingWall)
+        if (speed > minimumSpeedForBounce)
         {
             direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
             transform.rotation = rotationZ;
-            spiningSpeed = (speed - minimumSpeedForBounce) / 0.5f;
-            //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            //Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
-            //transform.rotation = rotationZ;
             isBouncing = true;
             bounceTime = maxBounceTime;
         }
-        isDeacceleration = true;
-        isHittingWall = true;
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void SpawnSprite()
     {
-        if (!isBouncing)
+        GameObject selectedPrefab = GetRandomSpritePrefab();
+        Vector3 spawnPoint = GetRandomSpawnPoint();
+        Instantiate(selectedPrefab, spawnPoint, Quaternion.identity);
+    }
+
+    private GameObject GetRandomSpritePrefab()
+    {
+        int randomIndex = Random.Range(0, 3);
+        switch (randomIndex)
         {
-            speed = 0;
-            isHittingWall = false;
+            case 0:
+                return spritePrefab1;
+            case 1:
+                return spritePrefab2;
+            case 2:
+                return spritePrefab3;
+            default:
+                return spritePrefab1; // Fallback to the first prefab
         }
-
     }
 
-    private Vector2Int WorldToGridPosition(Vector3 worldPosition)
+    private Vector3 GetRandomSpawnPoint()
     {
-        float gridWidth = gridManager.cols * gridManager.tileSize;
-        float gridHeight = gridManager.rows * gridManager.tileSize;
-        Vector3 startPos = new Vector3(-gridWidth / 2 + gridManager.tileSize / 2, -gridHeight / 2 + gridManager.tileSize / 2, 0);
-
-        Vector3 localPos = worldPosition - startPos;
-        int col = Mathf.FloorToInt(localPos.x / gridManager.tileSize);
-        int row = Mathf.FloorToInt(localPos.y / gridManager.tileSize);
-
-        return new Vector2Int(col, row);
+        int randomIndex = Random.Range(0, 3);
+        switch (randomIndex)
+        {
+            case 0:
+                return trailSpawnPoint1.transform.position;
+            case 1:
+                return trailSpawnPoint2.transform.position;
+            case 2:
+                return trailSpawnPoint3.transform.position;
+            default:
+                return trailSpawnPoint1.transform.position; // Fallback to the first spawn point
+        }
     }
 }
