@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryPowerUps : MonoBehaviour
@@ -30,12 +31,10 @@ public class InventoryPowerUps : MonoBehaviour
             Destroy(other.gameObject);
             HavePowerUp = true;
             PowerUp = other.GetComponent<PowerUpUi>().Powerup;
+            spawnPointPowerUps = other.GetComponent<PowerUpUi>().count;
             spawnPointPowerUps.count--;
         }
-        else if(other.tag == "SPPU")
-        {
-            spawnPointPowerUps = other.GetComponent<SpawnPointPowerUps>();
-        }
+        
     }
 
     public void UsingPowerUps()
