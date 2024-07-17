@@ -1,13 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum Player
 {
-    PlayerA, PlayerB,Default
+    PlayerA, PlayerB, Default
 }
 
 public class PlayerControl : MonoBehaviour
@@ -34,6 +31,15 @@ public class PlayerControl : MonoBehaviour
     public float brushRadius;
     private GridManager gridManager;
 
+    [SerializeField] private GameObject spritePrefab1;
+    [SerializeField] private GameObject spritePrefab2;
+    [SerializeField] private GameObject spritePrefab3;
+
+    [SerializeField] private float spawnDistance = 5.0f;
+    private Vector3 lastSpawnPosition;
+
+    [SerializeField] private float rotationSpeed = 5.0f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -44,6 +50,8 @@ public class PlayerControl : MonoBehaviour
             Debug.LogError("GridManager component not found in the scene.");
         }
         brushRadius = transform.localScale.x;
+
+        lastSpawnPosition = transform.position;
     }
 
     void FixedUpdate()
@@ -83,6 +91,11 @@ public class PlayerControl : MonoBehaviour
             gridManager.ChangeTileOwner(gridPosition, player, brushRadius);
         }
 
+        if (Vector3.Distance(transform.position, lastSpawnPosition) >= spawnDistance)
+        {
+            SpawnSprite();
+            lastSpawnPosition = transform.position;
+        }
     }
 
     private void Control()
@@ -221,23 +234,61 @@ public class PlayerControl : MonoBehaviour
         {
             direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
-            transform.rotation = rotationZ;
+            Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, direction);
+            StartCoroutine(SmoothRotate(targetRotation));
             isBouncing = true;
             bounceTime = maxBounceTime;
         }
     }
 
-    private Vector2Int WorldToGridPosition(Vector3 worldPosition)
+    private void SpawnSprite()
     {
-        float gridWidth = gridManager.cols * gridManager.tileSize;
-        float gridHeight = gridManager.rows * gridManager.tileSize;
-        Vector3 startPos = new Vector3(-gridWidth / 2 + gridManager.tileSize / 2, -gridHeight / 2 + gridManager.tileSize / 2, 0);
+        GameObject selectedPrefab = GetRandomSpritePrefab();
 
-        Vector3 localPos = worldPosition - startPos;
-        int col = Mathf.FloorToInt(localPos.x / gridManager.tileSize);
-        int row = Mathf.FloorToInt(localPos.y / gridManager.tileSize);
+        Vector3 spawnPoint = GetRandomSpawnPoint();
 
-        return new Vector2Int(col, row);
+        Instantiate(selectedPrefab, spawnPoint, Quaternion.identity);
+    }
+
+    private GameObject GetRandomSpritePrefab()
+    {
+        int randomIndex = Random.Range(0, 3);
+        switch (randomIndex)
+        {
+            case 0:
+                return spritePrefab1;
+            case 1:
+                return spritePrefab2;
+            case 2:
+                return spritePrefab3;
+            default:
+                return spritePrefab1;
+        }
+    }
+
+    private Vector3 GetRandomSpawnPoint()
+    {
+        int randomIndex = Random.Range(0, 3);
+        switch (randomIndex)
+        {
+            case 0:
+                return trailSpawnPoint1.transform.position;
+            case 1:
+                return trailSpawnPoint2.transform.position;
+            case 2:
+                return trailSpawnPoint3.transform.position;
+            default:
+                return trailSpawnPoint1.transform.position;
+        }
+    }
+
+    private IEnumerator SmoothRotate(Quaternion targetRotation)
+    {
+        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            yield return null;
+        }
+        transform.rotation = targetRotation;
     }
 }

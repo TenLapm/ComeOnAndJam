@@ -27,4 +27,9 @@ public class UIController : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void MapSelect()
+    {
+        SceneManager.LoadScene("MapSelect");
+    }
 }
