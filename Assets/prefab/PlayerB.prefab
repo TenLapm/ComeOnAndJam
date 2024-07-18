@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 312020539896364984}
   - component: {fileID: 6727562554973638199}
   - component: {fileID: 5021675351397661713}
-  - component: {fileID: 8961909960552607210}
   - component: {fileID: 4192103730411421569}
   - component: {fileID: 6076954726827271165}
   - component: {fileID: 5807127396895231293}
@@ -107,22 +106,11 @@ MonoBehaviour:
   upSpeed: 0.5
   slowSpeed: 0.05
   facing: 1.5
+  turning: 0.5
   minimumSpeedForBounce: 5
   maxBounceTime: 1
   player: 1
   brushRadius: 1.5
---- !u!114 &8961909960552607210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746489852456107573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9c42f5b1ec65e9479ba8cf1aa1c24c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4192103730411421569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,6 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HavePowerUp: 0
+  usingPowerUs: 0
 --- !u!50 &6076954726827271165
 Rigidbody2D:
   serializedVersion: 4
