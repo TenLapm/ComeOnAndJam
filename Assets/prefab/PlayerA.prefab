@@ -189,7 +189,6 @@ MonoBehaviour:
   minimumSpeed: 0
   upSpeed: 0.5
   slowSpeed: 0.05
-  facing: 3
   turning: 0.5
   minimumSpeedForBounce: 5
   maxBounceTime: 1

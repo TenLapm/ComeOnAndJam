@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class InventoryPowerUps : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class InventoryPowerUps : MonoBehaviour
     private float duration;
     private Transform scale;
     private SpawnPointPowerUps spawnPointPowerUps;
+    private List<GameObject> Clone = new List<GameObject>();
+    private GameObject Gclone;
     void Start()
     {
         
@@ -28,11 +31,12 @@ public class InventoryPowerUps : MonoBehaviour
         if (other.tag == "PowerUp" && !HavePowerUp)
         {
             Debug.Log("Pickup");
-            Destroy(other.gameObject);
             HavePowerUp = true;
             PowerUp = other.GetComponent<PowerUpUi>().Powerup;
             spawnPointPowerUps = other.GetComponent<PowerUpUi>().count;
+            Gclone = PowerUp.Clone;
             spawnPointPowerUps.count--;
+            Destroy(other.gameObject);
         }
         
     }
@@ -56,6 +60,17 @@ public class InventoryPowerUps : MonoBehaviour
                     break;
                 case 2:
                     break;
+                case 3:
+                    
+                    for(int i = 0; i < PowerUp.scale; i++)
+                    {
+                        float axisz = (360.0f / (PowerUp.scale + 1));
+                        GameObject c = Instantiate(Gclone, transform.position, Quaternion.Euler(new Vector3(0, 0, (axisz * (i + 1)) + transform.rotation.eulerAngles.z)));
+                        duration = PowerUp.duration;
+                        Clone.Add(c); 
+                    }
+                    usingPowerUs = true;
+                    break;
             }
         }
     }
@@ -78,6 +93,14 @@ public class InventoryPowerUps : MonoBehaviour
                     usingPowerUs = false;
                     break;
                 case 2:
+                    break;
+                case 3:
+                    usingPowerUs = false;
+                    for (int i = 0; i < PowerUp.scale; i++)
+                    {
+                        Destroy(Clone[i]);
+                    }
+                    Clone.Clear();
                     break;
             }
         }

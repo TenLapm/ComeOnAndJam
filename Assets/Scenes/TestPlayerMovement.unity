@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 358939017}
   m_Layer: 0
   m_Name: Square (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -514,7 +514,7 @@ GameObject:
   - component: {fileID: 478888007}
   m_Layer: 0
   m_Name: Square (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -736,7 +736,7 @@ GameObject:
   - component: {fileID: 536196948}
   m_Layer: 0
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -917,7 +917,7 @@ GameObject:
   - component: {fileID: 797436661}
   m_Layer: 0
   m_Name: Square (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1506,6 +1506,10 @@ PrefabInstance:
       propertyPath: maxTimer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1112356556498825798, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
+      propertyPath: PowerUp.Array.data[0]
+      value: 
+      objectReference: {fileID: 8917208418784984139, guid: 2144271f6fb7ebd4c83e1c7079cdda61, type: 3}
     - target: {fileID: 3314273616676505158, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.941174
@@ -1559,6 +1563,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 444497396562005244, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
+      propertyPath: turning
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5899278393697963769, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.8

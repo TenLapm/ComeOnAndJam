@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum powerUpType
 {
-    Default, TypeA, TypeB
+    Default, TypeA, TypeB, Clone
 }
 
 [CreateAssetMenu(fileName = "New PowerUp", menuName = "PowerUp")]
@@ -16,4 +16,6 @@ public class PowerUps : ScriptableObject
     public powerUpType type;
     public Sprite artwork;
     public float duration;
+    public float scale;
+    public GameObject Clone;
 }

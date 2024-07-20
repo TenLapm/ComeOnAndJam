@@ -22,14 +22,13 @@ public class PlayerControl : MonoBehaviour
     private float bounceTime;
     private Vector3 direction;
     private float spiningSpeed;
-    [SerializeField] private float maxSpeed = 10.0f;
+    public float maxSpeed = 10.0f;
     [SerializeField] private float minimumSpeed = 0.0f;
     [SerializeField] private float upSpeed = 0.5f;
     [SerializeField] private float slowSpeed = 0.5f;
-    [SerializeField] private float facing = 0.5f;
-    [SerializeField] private float turning = 0.5f;
+    public float turning = 0.5f;
     [SerializeField] private float minimumSpeedForBounce = 5.0f;
-    [SerializeField] private float maxBounceTime = 1.0f;
+    public float maxBounceTime = 1.0f;
     [SerializeField] private Player player;
 
     public float brushRadius;
@@ -42,11 +41,12 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
-        {
-            isDeacceleration = true;
-        }
-        brushRadius = transform.localScale.x;
+        
+            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
+            {
+                isDeacceleration = true;
+            }
+            brushRadius = transform.localScale.x;
 
     }
 
@@ -158,12 +158,12 @@ public class PlayerControl : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.A))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, facing);
+                
                 gameObject.transform.Rotate(0.0f, 0.0f, turning);
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, -facing);
+                
                 gameObject.transform.Rotate(0.0f, 0.0f, -turning);
             }
         }
@@ -219,12 +219,12 @@ public class PlayerControl : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, facing);
+               
                 gameObject.transform.Rotate(0.0f, 0.0f, turning);
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                gameObject.transform.Rotate(0.0f, 0.0f, -facing);
+                
                 gameObject.transform.Rotate(0.0f, 0.0f, -turning);
             }
         }
