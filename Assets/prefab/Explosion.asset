@@ -18,3 +18,4 @@ MonoBehaviour:
   duration: 0
   scale: 5
   Clone: {fileID: 0}
+  instant: 2

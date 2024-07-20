@@ -129,6 +129,10 @@ MonoBehaviour:
   Powerup: {fileID: 11400000, guid: dc44199c6e8a65e4e8a0e02425ec4ff8, type: 2}
   type: 0
   duration: 0
+  count: {fileID: 0}
+  scale: 0
+  instant: 0
+  maxTimer: 6
 --- !u!58 &9054062230571562461
 CircleCollider2D:
   m_ObjectHideFlags: 0

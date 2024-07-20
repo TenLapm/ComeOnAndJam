@@ -104,6 +104,8 @@ MonoBehaviour:
   duration: 0
   count: {fileID: 0}
   scale: 0
+  instant: 0
+  maxTimer: 2
 --- !u!50 &166204060472715707
 Rigidbody2D:
   serializedVersion: 4

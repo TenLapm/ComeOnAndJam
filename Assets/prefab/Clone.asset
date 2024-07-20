@@ -18,3 +18,4 @@ MonoBehaviour:
   duration: 3
   scale: 5
   Clone: {fileID: 8650232961753509261, guid: 8b28d11dc6cbfda48a7b141a98c5b714, type: 3}
+  instant: 2

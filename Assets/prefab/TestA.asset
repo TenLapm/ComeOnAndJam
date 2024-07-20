@@ -15,4 +15,7 @@ MonoBehaviour:
   name: TypeA
   type: 1
   artwork: {fileID: 0}
-  duration: 5
+  duration: 2
+  scale: 0
+  Clone: {fileID: 0}
+  instant: 1

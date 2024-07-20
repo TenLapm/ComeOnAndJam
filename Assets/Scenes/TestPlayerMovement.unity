@@ -1411,7 +1411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1746489852456107573, guid: 21ea71680dd20fd4a8e962d9f8040e02, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1509,7 +1509,7 @@ PrefabInstance:
     - target: {fileID: 1112356556498825798, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
       propertyPath: PowerUp.Array.data[0]
       value: 
-      objectReference: {fileID: 8917208418784984139, guid: 2144271f6fb7ebd4c83e1c7079cdda61, type: 3}
+      objectReference: {fileID: 5936384782072512144, guid: 1e2059a689f46e74586aa030d321e8cd, type: 3}
     - target: {fileID: 3314273616676505158, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.941174

@@ -15,6 +15,7 @@ public class InventoryPowerUps : MonoBehaviour
     private SpawnPointPowerUps spawnPointPowerUps;
     private List<GameObject> Clone = new List<GameObject>();
     private GameObject Gclone;
+    private int instant;
     void Start()
     {
         
@@ -36,6 +37,7 @@ public class InventoryPowerUps : MonoBehaviour
             spawnPointPowerUps = other.GetComponent<PowerUpUi>().count;
             Gclone = PowerUp.Clone;
             spawnPointPowerUps.count--;
+            instant = other.GetComponent<PowerUpUi>().instant;
             Destroy(other.gameObject);
         }
         
@@ -43,8 +45,38 @@ public class InventoryPowerUps : MonoBehaviour
 
     public void UsingPowerUps()
     {
-        
-        if (Input.GetKeyDown(KeyCode.I) && HavePowerUp)
+        if(instant == 1 && HavePowerUp)
+        {
+            type = (int)PowerUp.type;
+            HavePowerUp = false;
+            switch (type)
+            {
+                case 0:
+                    break;
+                case 1:
+                    duration = PowerUp.duration;
+                    scale = transform;
+                    transform.localScale = new Vector3(3f, 3f, 3f);
+                    usingPowerUs = true;
+                    break;
+                case 2:
+
+                    usingPowerUs = true;
+                    break;
+                case 3:
+
+                    for (int i = 0; i < PowerUp.scale; i++)
+                    {
+                        float axisz = (360.0f / (PowerUp.scale + 1));
+                        GameObject c = Instantiate(Gclone, transform.position, Quaternion.Euler(new Vector3(0, 0, (axisz * (i + 1)) + transform.rotation.eulerAngles.z)));
+                        duration = PowerUp.duration;
+                        Clone.Add(c);
+                    }
+                    usingPowerUs = true;
+                    break;
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.I) && HavePowerUp)
         {
             type = (int)PowerUp.type;
             HavePowerUp = false;
