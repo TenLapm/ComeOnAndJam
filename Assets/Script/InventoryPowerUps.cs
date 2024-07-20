@@ -59,6 +59,8 @@ public class InventoryPowerUps : MonoBehaviour
                     usingPowerUs = true;
                     break;
                 case 2:
+
+                    usingPowerUs = true;
                     break;
                 case 3:
                     
@@ -93,6 +95,7 @@ public class InventoryPowerUps : MonoBehaviour
                     usingPowerUs = false;
                     break;
                 case 2:
+                    usingPowerUs = false;
                     break;
                 case 3:
                     usingPowerUs = false;

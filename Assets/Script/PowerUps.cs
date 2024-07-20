@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum powerUpType
 {
-    Default, TypeA, TypeB, Clone
+    Default, UpSize, Explosion, Clone, 
 }
 
 [CreateAssetMenu(fileName = "New PowerUp", menuName = "PowerUp")]
