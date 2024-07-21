@@ -30,6 +30,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float minimumSpeedForBounce = 5.0f;
     public float maxBounceTime = 1.0f;
     [SerializeField] private Player player;
+    private bool isExplosion;
 
     public float brushRadius;
     private GridManager gridManager;
@@ -47,7 +48,16 @@ public class PlayerControl : MonoBehaviour
                 isDeacceleration = true;
             }
             brushRadius = transform.localScale.x;
-
+        if (isExplosion) {
+            speed = maxSpeed;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
+            transform.rotation = rotationZ;
+            spiningSpeed = (maxSpeed - minimumSpeedForBounce) / 0.5f;
+            isBouncing = true;
+            bounceTime = maxBounceTime;
+            isExplosion = false;
+        }
     }
 
     void FixedUpdate()
@@ -262,19 +272,22 @@ public class PlayerControl : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (speed > minimumSpeedForBounce && !isHittingWall)
-        {
-            direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
-            transform.rotation = rotationZ;
-            spiningSpeed = (speed - minimumSpeedForBounce) / 0.5f;
-            //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            //Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
-            //transform.rotation = rotationZ;
-            isBouncing = true;
-            bounceTime = maxBounceTime;
-        }
+            {
+                direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
+                transform.rotation = rotationZ;
+                spiningSpeed = (speed - minimumSpeedForBounce) / 0.5f;
+                //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                //Quaternion rotationZ = Quaternion.LookRotation(Vector3.forward, direction);
+                //transform.rotation = rotationZ;
+                isBouncing = true;
+                bounceTime = maxBounceTime;
+            }
+        
+        
         isDeacceleration = true;
         isHittingWall = true;
     }
@@ -289,16 +302,36 @@ public class PlayerControl : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Explosion"))
+        {
+            if (player != Player.PlayerA)
+            {
+                if (collision.gameObject.layer == 6)
+                {
+                    
+                    isExplosion = true;
+                }
+            }
+            if (player != Player.PlayerB)
+            {
+                if (collision.gameObject.layer == 7)
+                {
+                    isExplosion = true;
+                }
+            }
+
+        }
+    }
     private Vector2Int WorldToGridPosition(Vector3 worldPosition)
     {
         float gridWidth = gridManager.cols * gridManager.tileSize;
         float gridHeight = gridManager.rows * gridManager.tileSize;
         Vector3 startPos = new Vector3(-gridWidth / 2 + gridManager.tileSize / 2, -gridHeight / 2 + gridManager.tileSize / 2, 0);
-
         Vector3 localPos = worldPosition - startPos;
         int col = Mathf.FloorToInt(localPos.x / gridManager.tileSize);
         int row = Mathf.FloorToInt(localPos.y / gridManager.tileSize);
-
         return new Vector2Int(col, row);
     }
 }

@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!58 &14055130 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5175961700895427336, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
+  m_PrefabInstance: {fileID: 8700842490070869940}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &31647361 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4236238915845807719, guid: 5ef50ea068c39ea40be705fbdca5ead7, type: 3}
@@ -1413,6 +1418,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5021675351397661713, guid: 21ea71680dd20fd4a8e962d9f8040e02, type: 3}
+      propertyPath: turning
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5021675351397661713, guid: 21ea71680dd20fd4a8e962d9f8040e02, type: 3}
+      propertyPath: maxSpeed
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1504,10 +1517,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1112356556498825798, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
       propertyPath: maxTimer
-      value: 2
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1112356556498825798, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
+      propertyPath: PowerUp.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1112356556498825798, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
       propertyPath: PowerUp.Array.data[0]
+      value: 
+      objectReference: {fileID: 8917208418784984139, guid: 2144271f6fb7ebd4c83e1c7079cdda61, type: 3}
+    - target: {fileID: 1112356556498825798, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
+      propertyPath: PowerUp.Array.data[1]
       value: 
       objectReference: {fileID: 5936384782072512144, guid: 1e2059a689f46e74586aa030d321e8cd, type: 3}
     - target: {fileID: 3314273616676505158, guid: 613d6862dd9e0ba4ab94f4bbc672c05b, type: 3}
@@ -1567,6 +1588,18 @@ PrefabInstance:
       propertyPath: turning
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5175961700895427336, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
+      propertyPath: m_Radius
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175961700895427336, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175961700895427336, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5899278393697963769, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.8
@@ -1607,6 +1640,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7771749078621679863, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
+      propertyPath: Explosion
+      value: 
+      objectReference: {fileID: 14055130}
     - target: {fileID: 9149817192885560400, guid: bfcf6ed51b6747b4c9a0b3ef6176b45b, type: 3}
       propertyPath: m_Name
       value: PlayerA

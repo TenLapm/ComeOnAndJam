@@ -8,6 +8,7 @@ public class InventoryPowerUps : MonoBehaviour
 {
     public bool HavePowerUp = false;
     public bool usingPowerUs = false;
+    [SerializeField] private CircleCollider2D Explosion;
     private int type;
     private PowerUps PowerUp;
     private float duration;
@@ -76,7 +77,7 @@ public class InventoryPowerUps : MonoBehaviour
                     break;
             }
         }
-        if(Input.GetKeyDown(KeyCode.I) && HavePowerUp)
+        if(Input.GetKeyDown(KeyCode.I) && HavePowerUp && !usingPowerUs)
         {
             type = (int)PowerUp.type;
             HavePowerUp = false;
@@ -91,8 +92,13 @@ public class InventoryPowerUps : MonoBehaviour
                     usingPowerUs = true;
                     break;
                 case 2:
-
+                    duration = PowerUp.duration;
+                    Explosion.enabled = true;
                     usingPowerUs = true;
+                    for (float i = 0; i < PowerUp.scale; i += 0.2f)
+                    {
+                        Explosion.radius = i;
+                    }
                     break;
                 case 3:
                     
@@ -127,6 +133,7 @@ public class InventoryPowerUps : MonoBehaviour
                     usingPowerUs = false;
                     break;
                 case 2:
+                    Explosion.enabled = false;
                     usingPowerUs = false;
                     break;
                 case 3:
@@ -140,4 +147,6 @@ public class InventoryPowerUps : MonoBehaviour
             }
         }
     }
+
+
 }

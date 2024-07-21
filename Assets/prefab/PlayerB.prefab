@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4192103730411421569}
   - component: {fileID: 6076954726827271165}
   - component: {fileID: 5807127396895231293}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerB
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -105,7 +105,6 @@ MonoBehaviour:
   minimumSpeed: 0
   upSpeed: 0.5
   slowSpeed: 0.05
-  facing: 1.5
   turning: 0.5
   minimumSpeedForBounce: 5
   maxBounceTime: 1
@@ -197,7 +196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6149204433748077480}
   - component: {fileID: 4635144935822701793}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

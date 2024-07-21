@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Bomb
   type: 2
   artwork: {fileID: 0}
-  duration: 0
-  scale: 5
+  duration: 3
+  scale: 2
   Clone: {fileID: 0}
   instant: 2
